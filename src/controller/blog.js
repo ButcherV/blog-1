@@ -18,6 +18,18 @@ const getList = (author, keyword) => {
     ]
 }
 
+const getDetail = (id) => {
+    // return mock data
+    return {
+        id: 1,
+        title: '标题A',
+        content: '内容A',
+        createTime: 1637549625344,
+        author: 'zhangsan'
+    }
+}
+
 module.exports = {
-    getList
+    getList,
+    getDetail
 }
