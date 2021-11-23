@@ -46,11 +46,16 @@ const updateBlog = (id, blogData = {}) => {
     return true
 }
 
+const delBlog = (id) => {
+    return true
+}
+
  
 
 module.exports = {
     getList,
     getDetail,
     newBlog,
-    updateBlog
+    updateBlog,
+    delBlog
 }
