@@ -1,8 +1,14 @@
-const { getList, getDetail } = require('../controller/blog')
+const { 
+    getList, 
+    getDetail,
+    newBlog,
+    updateBlog
+} = require('../controller/blog')
 const { SucessModel, ErrorModel } = require('../model/resModel')
 
 const handleBlogRouter = (req, res) => {
     const method = req.method // GET POST
+    const id = req.query.id
 
     //Get blog list
     if(method === 'GET' && req.path === '/api/blog/list') {
@@ -15,23 +21,24 @@ const handleBlogRouter = (req, res) => {
 
     //Get blog detail
     if(method === 'GET' && req.path === '/api/blog/detail') {
-        const id = req.query.id
         const data = getDetail(id)
         return new SucessModel(data)
     }
 
     //Create a new blog
     if(method === 'POST' && req.path === '/api/blog/new') {
-        return {
-            msg: 'Interface to create a new blog'
-        }
+        const data = newBlog(req.body)
+        return new SucessModel(data)
     }
 
     //Update a blog
     if(method === 'POST' && req.path === '/api/blog/update') {
-        return {
-            msg: 'Interface to update a blog'
-        }
+        const result = updateBlog(id, req.body)
+        if(result) {
+            return new SucessModel()
+        } else {
+            return new ErrorModel('更新博客失败')
+        } 
     }
 
     //Delete a blog
