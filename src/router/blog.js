@@ -38,7 +38,7 @@ const handleBlogRouter = (req, res) => {
         if(result) {
             return new SucessModel()
         } else {
-            return new ErrorModel('更新博客失败')
+            return new ErrorModel('update blog failure')
         }
     }
 
@@ -48,7 +48,7 @@ const handleBlogRouter = (req, res) => {
         if(result) {
             return new SucessModel()
         } else {
-            return new ErrorModel('删除博客失败')
+            return new ErrorModel('delete blog failure')
         }        
     }
 }
