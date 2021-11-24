@@ -1,23 +1,35 @@
 // controller: Specialized data processing
 
+const { exec } = require("../db/mysql")
+
 const getList = (author, keyword) => {
-    // return mock data
-    return [
-        {
-            id: 1,
-            title: '标题A',
-            content: '内容A',
-            createTime: 1637549625344,
-            author: 'zhangsan'
-        },
-        {
-            id: 2,
-            title: '标题B',
-            content: '内容B',
-            createTime: 1637549628377,
-            author: 'lisi'
-        }
-    ]
+    // // return mock data
+    // return [
+    //     {
+    //         id: 1,
+    //         title: '标题A',
+    //         content: '内容A',
+    //         createTime: 1637549625344,
+    //         author: 'zhangsan'
+    //     },
+    //     {
+    //         id: 2,
+    //         title: '标题B',
+    //         content: '内容B',
+    //         createTime: 1637549628377,
+    //         author: 'lisi'
+    //     }
+    // ]
+    let sql = `select * from blogs where 1=1 `
+    if(author) {
+        sql += `and author='${author}' `
+    }
+    if(keyword) {
+        sql += `and title like '%${keyword}%' `
+    }
+    sql += `order by createtime desc`
+
+    return exec(sql)
 }
 
 const getDetail = (id) => {
