@@ -48,7 +48,7 @@ const getDetail = (id) => {
 } 
 
 const newBlog = (blogData = {}) => {
-    // blogData is new blog object, include title and content
+    // blogData is new blog object, include title , content, author
     // console.log('newBlog blogData...', blogData)
 
     // return  {
@@ -77,8 +77,21 @@ const updateBlog = (id, blogData = {}) => {
     // blogData is new blog object, include title and content
     // id: new blog id
     // console.log('update blog', id,  blogData)
+    
+    const title = blogData.title
+    const content = blogData.content
 
-    return true
+    const sql = `
+        update blogs set title='${title}', content='${content}' where id=${id}
+    `
+
+    return exec(sql).then(updateData => {
+        console.log('updateData is ', updateData)
+        if(updateData.affectedRows > 0) {
+            return true
+        }
+        return false
+    })
 }
 
 const delBlog = (id) => {
