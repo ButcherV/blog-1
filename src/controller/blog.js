@@ -45,15 +45,32 @@ const getDetail = (id) => {
     return exec(sql).then(rows => {
         return rows[0]
     })
-}
+} 
 
 const newBlog = (blogData = {}) => {
     // blogData is new blog object, include title and content
     // console.log('newBlog blogData...', blogData)
 
-    return {
-        id: 3 // new blog id in database
-    }
+    // return  {
+    //     id: 3
+    // }
+
+    const title = blogData.title
+    const content = blogData.content
+    const author = blogData.author
+    const createTime = Date.now()
+
+    const sql = `
+        insert into blogs (title, content, createtime, author)
+        values ('${title}', '${content}', '${createTime}', '${author}')
+    `
+    
+    return exec(sql).then(insertData => {
+        console.log('insertData is', insertData)
+        return {
+            id: insertData.insertId
+        }
+    })
 } 
 
 const updateBlog = (id, blogData = {}) => {

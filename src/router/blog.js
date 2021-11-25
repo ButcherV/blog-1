@@ -35,8 +35,13 @@ const handleBlogRouter = (req, res) => {
 
     //Create a new blog
     if(method === 'POST' && req.path === '/api/blog/new') {
-        const data = newBlog(req.body)
-        return new SucessModel(data)
+        // const data = newBlog(req.body)
+        // return new SucessModel(data)
+        req.body.author = 'zhangsan' // New blogs are created after logging in. Login is not implemented here, and the author temporarily uses false data.
+        const result = newBlog(req.body)
+        return result.then(data => {
+            return new SucessModel(data)
+        })
     }
 
     //Update a blog
