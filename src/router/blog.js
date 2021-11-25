@@ -59,12 +59,15 @@ const handleBlogRouter = (req, res) => {
 
     //Delete a blog
     if(method === 'POST' && req.path === '/api/blog/del') {
-        const result = delBlog(id)
-        if(result) {
-            return new SucessModel()
-        } else {
-            return new ErrorModel('delete blog failure')
-        }        
+        const author = 'zhangsan' // New blogs are created after logging in. Login is not implemented here, and the author temporarily uses false data.
+        const result = delBlog(id, author)
+        return result.then(val => {
+            if(val) {
+                return new SucessModel()
+            } else {
+                return new ErrorModel('delete blog failure')
+            }
+        })
     }
 }
 
