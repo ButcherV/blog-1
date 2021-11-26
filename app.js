@@ -42,6 +42,24 @@ const serverHandle = (req, res) => {
     // query
     req.query = querystring.parse(url.split('?')[1])
 
+    // cookie
+    const cookieStr = req.headers.cookie || '' 
+    req.cookie = {}
+    
+    // k1=v1;k2=v2;k3=v3; => {k1: 'v1', k2: 'v2', k3: 'v3'}
+    cookieStr.split(';').forEach(item => {
+        if(!item) {
+            return
+        }
+        const arr = item.split('=')
+        // trim(): need to remove the space in front of the value after the first value in the cookie.
+        // https://coding.imooc.com/lesson/320.html#mid=22621
+        const key = arr[0].trim()
+        const val = arr[1].trim()
+        req.cookie[key] = val
+    })
+    // console.log('req.cookie is ', req.cookie)
+
     getPostData(req).then(postData => {
         req.body = postData
 
