@@ -1,8 +1,9 @@
 const querystring = require('querystring')
+const { get, set } = require('./src/db/redis')
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 
-const SESSION_DATA = {}
+// const SESSION_DATA = {}
 
 const getCookieExpires = () => {
     const d = new Date()
@@ -17,7 +18,7 @@ const getPostData = (req) => {
         if(req.method !== 'POST') {
             resolve({})
             return
-        }
+        } 
         if(req.headers['content-type'] !== 'application/json') {
             resolve({})
             return
@@ -68,23 +69,48 @@ const serverHandle = (req, res) => {
     }
 
     // session
+    // let needSetCookie = false
+    // let userId = req.cookie.userid || ''
+
+    // if(userId) {
+    //     // Q
+    //     // https://coding.imooc.com/learn/questiondetail/G8glLYlpV0wYxpDa.html
+    //     if(!SESSION_DATA[userId]) {
+    //         SESSION_DATA[userId] = {}
+    //     }
+    // } else {
+    //     needSetCookie = true
+    //     userId = `${Date.now()}_${Math.random()}`
+    //     SESSION_DATA[userId] = {}
+    // }
+    // req.session = SESSION_DATA[userId]
+     
+    // session in redis
     let needSetCookie = false
     let userId = req.cookie.userid || ''
 
-    if(userId) {
-        // Q
-        // https://coding.imooc.com/learn/questiondetail/G8glLYlpV0wYxpDa.html
-        if(!SESSION_DATA[userId]) {
-            SESSION_DATA[userId] = {}
-        }
-    } else {
+    if(!userId) {
         needSetCookie = true
         userId = `${Date.now()}_${Math.random()}`
-        SESSION_DATA[userId] = {}
-    }
-    req.session = SESSION_DATA[userId]
 
-    getPostData(req).then(postData => {
+        // init session in redis
+        set(userId, {})
+    }
+
+    // obtain session
+    req.sessionId = userId
+    get(req.sessionId).then(sessionData => {
+        if(sessionData == null) {
+            // init session in redis
+            set(req.sessionId, {})
+            req.session = {}
+        } else {
+            req.session = sessionData
+        }
+        console.log('req.session ', req.session)
+
+        return getPostData(req)
+    }).then(postData => {
         req.body = postData
 
         // blog router
