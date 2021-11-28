@@ -97,7 +97,6 @@ const serverHandle = (req, res) => {
         set(userId, {})
     }
 
-    // obtain session
     req.sessionId = userId
     get(req.sessionId).then(sessionData => {
         if(sessionData == null) {

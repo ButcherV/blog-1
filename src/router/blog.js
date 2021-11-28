@@ -7,6 +7,14 @@ const {
 } = require('../controller/blog')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 
+const loginCheck = (req) => {
+    if(!req.session.username) {
+        return Promise.resolve(
+            new ErrorModel('no login')
+        )
+    }
+}
+
 const handleBlogRouter = (req, res) => {
     const method = req.method // GET POST
     const id = req.query.id
@@ -37,7 +45,13 @@ const handleBlogRouter = (req, res) => {
     if(method === 'POST' && req.path === '/api/blog/new') {
         // const data = newBlog(req.body)
         // return new SuccessModel(data)
-        req.body.author = 'zhangsan' // New blogs are created after logging in. Login is not implemented here, and the author temporarily uses false data.
+        const loginCheckResult = loginCheck(req)
+        if(loginCheckResult) {
+            // no login
+            return loginCheck
+        }
+
+        req.body.author = req.session.username
         const result = newBlog(req.body)
         return result.then(data => {
             return new SuccessModel(data)
@@ -46,6 +60,12 @@ const handleBlogRouter = (req, res) => {
 
     //Update a blog
     if(method === 'POST' && req.path === '/api/blog/update') {
+        const loginCheckResult = loginCheck(req)
+        if(loginCheckResult) {
+            // no login
+            return loginCheck
+        }
+
         const result = updateBlog(id, req.body)
         return result.then(val => {
             if(val) {
@@ -59,7 +79,13 @@ const handleBlogRouter = (req, res) => {
 
     //Delete a blog
     if(method === 'POST' && req.path === '/api/blog/del') {
-        const author = 'zhangsan' // New blogs are created after logging in. Login is not implemented here, and the author temporarily uses false data.
+        const loginCheckResult = loginCheck(req)
+        if(loginCheckResult) {
+            // no login
+            return loginCheck
+        } 
+         
+        const author = req.session.username
         const result = delBlog(id, author)
         return result.then(val => {
             if(val) {
