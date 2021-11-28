@@ -15,6 +15,6 @@
     "nodemon": "^2.0.15"
   },
   "dependencies": {
-    "mysql": "^2.18.1"
+    "mysql2": "^2.3.3"
   }
 }
