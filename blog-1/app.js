@@ -43,7 +43,7 @@ const getPostData = (req) => {
 
 const serverHandle = (req, res) => {
     // Record access logs
-    access(`${req.method} -- ${req.url}-- ${req.headers['user-agent']} -- ${Date.now()}`)
+    access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
 
     // Return JSON format
     res.setHeader('Content-type', 'application/json')
