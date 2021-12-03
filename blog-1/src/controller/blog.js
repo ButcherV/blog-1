@@ -2,6 +2,8 @@
 
 const { exec } = require("../db/mysql")
 
+const xss = require('xss')
+
 const getList = (author, keyword) => {
     // // return mock data
     // return [
@@ -55,8 +57,9 @@ const newBlog = (blogData = {}) => {
     //     id: 3
     // }
 
-    const title = blogData.title
-    const content = blogData.content
+    const title = xss(blogData.title)
+    console.log('title is', title)
+    const content = xss(blogData.content)
     const author = blogData.author
     const createTime = Date.now()
 
@@ -78,8 +81,8 @@ const updateBlog = (id, blogData = {}) => {
     // id: new blog id
     // console.log('update blog', id,  blogData)
     
-    const title = blogData.title
-    const content = blogData.content
+    const title = xss(blogData.title)
+    const content = xss(blogData.content)
 
     const sql = `
         update blogs set title='${title}', content='${content}' where id=${id}
